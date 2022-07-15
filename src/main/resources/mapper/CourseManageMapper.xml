@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.my.stu_course.stu_cour.mapper.CourseManageMapper">
+
+    <resultMap id="courMap" type="com.my.stu_course.stu_cour.model.CourseInfo">
+        <id property="id" column="id"/>
+        <result property="courId" column="course_id"/>
+        <result property="courName" column="course_name"/>
+        <result property="courState" column="course_state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <insert id="courInsert" parameterType="CourseInfo">
+        insert into course_info(course_id,course_name,course_state,create_time,create_by,update_time,update_by)
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="courId != null and courId != ''"> #{courId},</if>
+            <if test="courName != null and courName != ''"> #{courName},</if>
+            <if test="courState != null and courState != ''">  #{courState},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">  #{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null and updateBy != ''">  #{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="courUpdate" parameterType="CourseInfo">
+        update course_info left join stu_course on course_info.course_id=stu_course.course_id
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courId   != null and courId   != ''">course_info.course_id= #{courId},stu_course.course_id= #{courId},</if>
+            <if test="courName != null and courName != ''">course_info.course_name= #{courName},stu_course.course_name= #{courName},</if>
+            <if test="courState != null and courState != ''">  course_info.course_state=#{courState},</if>
+            <if test="updateTime != null">course_info.update_time=#{updateTime},</if>
+            <if test="updateBy != null and updateBy != ''"> course_info.update_by= #{updateBy},</if>
+        </trim>
+        where course_info.course_id=#{courId};
+    </update>
+
+    <update id="courDelete" parameterType="Integer">
+        update course_info set course_state=2 where course_id=#{id};
+    </update>
+
+
+    <select id="selectAll" resultMap="courMap" >
+        select * from course_info;
+    </select>
+    <select id="selectCourById" resultMap="courMap">
+        select * from course_info where id=#{id};
+    </select>
+    <select id="selectCourByCourId" resultMap="courMap">
+        select * from course_info where course_id=#{courId} and course_state=0 ;
+    </select>
+    <select id="selectId" resultType="java.lang.Integer">
+        select id from course_info where id=#{id};
+    </select>
+    <select id="selectCourId" resultType="java.lang.Integer">
+        select  course_id from course_info where course_id=#{courId};
+    </select>
+    <select id="selectCourByName" resultType="string">
+        select distinct course_name from course_info where course_name=#{courName};
+    </select>
+    <select id="selectCountName" resultType="java.lang.Integer">
+        select count(course_name) from course_info where course_name=#{courName};
+    </select>
+    <select id="selectCourBycourIdUpdate" resultMap="courMap">
+        select * from course_info where course_id=#{courId};
+    </select>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.my.stu_course.stu_cour.mapper.StuCourseMapper">
+    <resultMap id="stuCourseMap" type="com.my.stu_course.stu_cour.model.StuCourse">
+        <id property="id" column="id"/>
+        <result property="stuId" column="stu_id"/>
+        <result property="stuName" column="stu_name"/>
+        <result property="stuSex" column="stu_sex"/>
+        <result property="stuAge" column="stu_age"/>
+        <result property="courId" column="course_id"/>
+        <result property="courName" column="course_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="StuCourse">
+        insert into stu_course(stu_id,stu_name,stu_sex,stu_age,course_id,course_name,create_time,create_by,update_time,update_by,state)
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="stuId != null and stuId != ''"> #{stuId},</if>
+            <if test="stuName != null and stuName != ''"> #{stuName},</if>
+            <if test="stuSex != null and stuSex != ''">#{stuSex},</if>
+            <if test="stuAge != null and stuAge != ''">#{stuAge},</if>
+            <if test="courId != null and courId != ''">#{courId},</if>
+            <if test="courName != null and courName != ''">  #{courName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">  #{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null and updateBy != ''">  #{updateBy},</if>
+            <if test="state != null and state != ''">  #{state},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="StuCourse">
+        update stu_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stuId != null and stuId != ''"> stu_id=#{stuId},</if>
+            <if test="stuName != null and stuName != ''">stu_name= #{stuName},</if>
+            <if test="stuSex != null and stuSex != ''">stu_sex=#{stuSex},</if>
+            <if test="stuAge != null and stuAge != ''">stu_age=#{stuAge},</if>
+            <if test="courId != null and courId != ''">course_id=#{courId},</if>
+            <if test="courName != null and courName != ''">  course_name=#{courName},</if>
+            <if test="updateTime != null">update_time=#{updateTime},</if>
+            <if test="updateBy != null and updateBy != ''"> update_by =#{updateBy},</if>
+            <if test="state != null and state != ''"> state= #{state},</if>
+        </trim>
+        where id=#{id};
+    </update>
+    <update id="logicDeleteByCourId" parameterType="integer">
+        update  stu_course set state=1 where course_id=#{courId};
+    </update>
+
+    <delete id="delete">
+        delete from  stu_course where stu_id=#{id};
+    </delete>
+    <update id="updateStateByStuId">
+        update stu_course set state=1 where stu_id=#{stuId};
+    </update>
+    <update id="updateStateByCourId">
+        update stu_course set state=1 where course_id=#{courId};
+    </update>
+
+    <select id="selectCountStuById" resultType="Integer">
+        select count(stu_id) from stu_course where stu_id=#{stuId} and state=0;
+    </select>
+    <select id="selectCountCourById" resultType="java.lang.Integer">
+        select count(course_id) from stu_course where course_id=#{courId};
+    </select>
+    <select id="selectAll" resultMap="stuCourseMap">
+        select * from stu_course;
+    </select>
+    <select id="selectById" resultMap="stuCourseMap">
+        select * from stu_course where id=#{id}
+    </select>
+    <select id="selectSTuCourId" resultType="java.lang.Integer">
+        select id from stu_course where id=#{id};
+    </select>
+    <select id="selectByStuId" resultMap="stuCourseMap">
+        select * from stu_course where stu_id=#{stuId};
+    </select>
+    <select id="selectByStuCourId" resultMap="stuCourseMap">
+        select * from stu_course where stu_id=#{stuId} and course_id=#{courId};
+    </select>
+</mapper>
