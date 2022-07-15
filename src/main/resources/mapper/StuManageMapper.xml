@@ -77,3 +77,5 @@
         update stu_info left join stu_course on stu_info.stu_id=stu_course.stu_id set stu_state=2,state=1 where stu_info.stu_id=#{id};
     </update>
 </mapper>
+
+<!--adhcouvch/-->
